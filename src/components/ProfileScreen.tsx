@@ -25,7 +25,7 @@ const ProfileScreen = () => {
             </div>
           )}
           <button 
-            onClick={() => navigate('/settings/account')} 
+            onClick={() => navigate('/settings')} 
             className="w-12 h-12 glass rounded-full flex items-center justify-center hover-effect transition-all"
           >
             <ICONS.Settings size={22} className="text-white" />

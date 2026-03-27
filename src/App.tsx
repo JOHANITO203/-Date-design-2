@@ -16,9 +16,6 @@ import BoostPage from './pages/BoostPage';
 import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import AccountSettingsPage from './pages/AccountSettingsPage';
-import PrivacyPage from './pages/PrivacyPage';
-import NotificationsPage from './pages/NotificationsPage';
-import PreferencesPage from './pages/PreferencesPage';
 import AppShell from './pages/AppShell';
 import NotFound from './pages/NotFound';
 
@@ -46,6 +43,7 @@ export default function App() {
               {/* Settings within AppShell for Desktop Sidebar consistency */}
               <Route path="/settings" element={<AccountSettingsPage />} />
               <Route path="/settings/:category" element={<AccountSettingsPage />} />
+              <Route path="/settings/:category/:sub" element={<AccountSettingsPage />} />
             </Route>
 
             {/* Sub-screens / Full-screen views */}
