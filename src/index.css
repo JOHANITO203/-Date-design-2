@@ -12,11 +12,66 @@
 }
 
 @layer base {
+  :root {
+    /* Adaptive Spacing & Radius */
+    --app-padding: 1.5rem;
+    --card-radius: 24px;
+    --touch-target: 44px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --app-padding: 2rem;
+      --card-radius: 32px;
+      --touch-target: 48px;
+    }
+  }
+
   body {
     @apply bg-black text-white font-sans antialiased overflow-hidden;
     background: linear-gradient(to bottom, #1a0b2e, #000000);
     height: 100vh;
     width: 100vw;
+  }
+
+  /* Pointer-based interactions */
+  @media (pointer: coarse) {
+    /* Mobile/Tablet: Disable hover effects that stick on touch */
+    .hover-effect {
+      @apply active:scale-95 transition-transform;
+    }
+    
+    /* Ensure large touch targets */
+    button, a {
+      min-height: var(--touch-target);
+      min-width: var(--touch-target);
+    }
+  }
+
+  @media (pointer: fine) {
+    /* Desktop: Enable rich hover states */
+    .hover-effect:hover {
+      @apply scale-105 brightness-110 shadow-lg;
+    }
+    
+    /* Custom thin scrollbars for power users */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
   }
 }
 

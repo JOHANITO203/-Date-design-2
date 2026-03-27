@@ -25,7 +25,7 @@ import NotFound from './pages/NotFound';
 export default function App() {
   return (
     <Router>
-      <div className="h-screen w-full max-w-md mx-auto relative bg-black overflow-hidden shadow-2xl">
+      <div className="h-screen w-full bg-black overflow-hidden relative">
         <AnimatePresence mode="wait">
           <Routes>
             {/* Public Routes */}
@@ -35,22 +35,22 @@ export default function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/setup" element={<ProfileSetupPage />} />
 
-            {/* App Shell with BottomNav */}
+            {/* App Shell with Adaptive Navigation */}
             <Route element={<AppShell />}>
               <Route path="/discover" element={<DiscoverPage />} />
               <Route path="/likes" element={<LikesPage />} />
               <Route path="/messages" element={<MessagesPage />} />
               <Route path="/boost" element={<BoostPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              
+              {/* Settings within AppShell for Desktop Sidebar consistency */}
+              <Route path="/settings" element={<AccountSettingsPage />} />
+              <Route path="/settings/:category" element={<AccountSettingsPage />} />
             </Route>
 
             {/* Sub-screens / Full-screen views */}
             <Route path="/chat/:userId" element={<ChatPage />} />
             <Route path="/profile/edit" element={<EditProfilePage />} />
-            <Route path="/settings" element={<AccountSettingsPage />} />
-            <Route path="/settings/privacy" element={<PrivacyPage />} />
-            <Route path="/settings/notifications" element={<NotificationsPage />} />
-            <Route path="/settings/preferences" element={<PreferencesPage />} />
 
             {/* Fallback */}
             <Route path="/404" element={<NotFound />} />

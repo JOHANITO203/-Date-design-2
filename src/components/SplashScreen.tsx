@@ -5,7 +5,7 @@ const SplashScreen = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative h-screen w-full flex flex-col items-center justify-end p-8 overflow-hidden">
+    <div className="relative h-full w-full flex flex-col items-center justify-end p-8 overflow-hidden">
       {/* Background "Video" Simulation */}
       <div className="absolute inset-0 z-0">
         <img 

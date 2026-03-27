@@ -19,7 +19,13 @@ import {
   Smartphone,
   Fingerprint,
   RotateCcw,
-  Info
+  Info,
+  Shield,
+  Bell,
+  LogOut,
+  Edit,
+  Eye,
+  HelpCircle
 } from 'lucide-react';
 
 export type Screen = 'splash' | 'onboarding' | 'main';
@@ -168,5 +174,11 @@ export const ICONS = {
   Smartphone,
   Fingerprint,
   Rewind: RotateCcw,
-  Info
+  Info,
+  Shield,
+  Bell,
+  LogOut,
+  Edit,
+  Eye,
+  HelpCircle
 };

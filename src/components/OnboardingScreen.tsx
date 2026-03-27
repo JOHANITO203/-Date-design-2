@@ -53,7 +53,7 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col p-6 sm:p-8 pt-12 sm:pt-16 overflow-hidden bg-black">
+    <div className="h-full w-full flex flex-col p-6 sm:p-8 pt-12 sm:pt-16 overflow-hidden bg-black">
       {/* Progress Bar */}
       <div className="flex gap-2 mb-8 sm:mb-12 shrink-0">
         {Array.from({ length: totalSteps }).map((_, i) => (

@@ -4,7 +4,7 @@ import { Heart, Star, Zap } from 'lucide-react';
 
 const MatchesScreen: React.FC = () => {
   return (
-    <div className="min-h-screen bg-black text-white p-6 pb-24">
+    <div className="min-h-full bg-black text-white p-6 pb-24">
       <header className="mb-8">
         <h1 className="text-3xl font-bold">Your Likes</h1>
         <p className="text-[#8E8E93]">See who's interested in you</p>

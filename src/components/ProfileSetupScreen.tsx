@@ -8,7 +8,7 @@ const ProfileSetupScreen: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="h-screen w-full flex flex-col p-6 sm:p-8 pt-12 sm:pt-16 overflow-hidden bg-black relative">
+    <div className="h-full w-full flex flex-col p-6 sm:p-8 pt-12 sm:pt-16 overflow-hidden bg-black relative">
       {/* Background gradients */}
       <div className="absolute top-[-10%] left-[-20%] w-[80%] h-[60%] bg-pink-500/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-20%] w-[80%] h-[60%] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none" />

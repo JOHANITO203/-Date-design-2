@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'motion/react';
 import { ICONS, MOCK_USERS } from '../types';
 import GlassButton from './ui/GlassButton';
+import { useDevice } from '../hooks/useDevice';
 
 const SwipeScreen = () => {
+  const { isDesktop, isTablet } = useDevice();
+  const isLarge = isDesktop || isTablet;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [showMatch, setShowMatch] = useState(false);
@@ -70,142 +73,144 @@ const SwipeScreen = () => {
         </button>
       </div>
 
-      {/* 2) Carte principale */}
-      <div className="flex-1 relative px-4 mb-32">
-        <AnimatePresence>
-          {/* Stack background card */}
-          <motion.div
-            key={`next-${nextUser.id}`}
-            className="absolute inset-x-4 top-0 bottom-0 rounded-[36px] overflow-hidden bg-zinc-900"
-            style={{ scale: 0.96, y: 8, opacity: 0.4, zIndex: 0 }}
-          >
-            <img src={nextUser.photos[0]} className="w-full h-full object-cover grayscale-[0.3]" alt="next" referrerPolicy="no-referrer" />
-          </motion.div>
-
-          {/* Current Card */}
-          <motion.div
-            key={user.id}
-            drag
-            dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-            onDragEnd={handleDragEnd}
-            style={{ x, y, rotate, opacity, zIndex: 10 }}
-            className="absolute inset-x-4 top-0 bottom-0 rounded-[36px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] cursor-grab active:cursor-grabbing border border-white/5 bg-zinc-900"
-            onClick={handlePhotoNav}
-          >
-            {/* Image plein écran */}
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={photoIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                src={user.photos[photoIndex]}
-                className="w-full h-full object-cover pointer-events-none"
-                alt={user.name}
-                referrerPolicy="no-referrer"
-              />
-            </AnimatePresence>
-
-            {/* 4) Feedback interaction (Stamps) */}
-            <motion.div 
-              style={{ opacity: likeOpacity, scale: useTransform(x, [0, 150], [0.5, 1.2]) }} 
-              className="absolute top-20 left-10 border-4 border-green-500 text-green-500 font-black text-4xl px-6 py-2 rounded-xl rotate-[-20deg] pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(34,197,94,0.3)]"
+      {/* 2) Carte principale - Centrée et contrainte sur desktop */}
+      <div className="flex-1 relative flex justify-center items-start px-4 mb-32">
+        <div className={`relative w-full h-full ${isLarge ? 'max-w-[420px] max-h-[750px] aspect-[9/16]' : ''}`}>
+          <AnimatePresence>
+            {/* Stack background card */}
+            <motion.div
+              key={`next-${nextUser.id}`}
+              className="absolute inset-0 rounded-[36px] overflow-hidden bg-zinc-900"
+              style={{ scale: 0.96, y: 8, opacity: 0.4, zIndex: 0 }}
             >
-              J'AIME
-            </motion.div>
-            <motion.div 
-              style={{ opacity: nopeOpacity, scale: useTransform(x, [0, -150], [0.5, 1.2]) }} 
-              className="absolute top-20 right-10 border-4 border-red-500 text-red-500 font-black text-4xl px-6 py-2 rounded-xl rotate-[20deg] pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(239,68,68,0.3)]"
-            >
-              NON
-            </motion.div>
-            <motion.div 
-              style={{ opacity: superLikeOpacity, scale: useTransform(y, [0, -150], [0.5, 1.2]) }} 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-purple-500 text-purple-500 font-black text-4xl px-6 py-2 rounded-xl pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(168,85,247,0.3)]"
-            >
-              SUPER
+              <img src={nextUser.photos[0]} className="w-full h-full object-cover grayscale-[0.3]" alt="next" referrerPolicy="no-referrer" />
             </motion.div>
 
-            {/* Overlay gradient noir en bas */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/10 pointer-events-none" />
-            
-            {/* Progress bar en haut */}
-            <div className="absolute top-4 left-6 right-6 flex gap-1.5 z-20">
-              {user.photos.map((_, i) => (
-                <div key={i} className="h-[2px] flex-1 rounded-full bg-white/20 overflow-hidden">
-                  <motion.div 
-                    className="h-full bg-white"
-                    initial={{ width: 0 }}
-                    animate={{ width: i === photoIndex ? '100%' : i < photoIndex ? '100%' : '0%' }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </div>
-              ))}
-            </div>
+            {/* Current Card */}
+            <motion.div
+              key={user.id}
+              drag
+              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+              onDragEnd={handleDragEnd}
+              style={{ x, y, rotate, opacity, zIndex: 10 }}
+              className="absolute inset-0 rounded-[36px] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.8)] cursor-grab active:cursor-grabbing border border-white/5 bg-zinc-900"
+              onClick={handlePhotoNav}
+            >
+              {/* Image plein écran */}
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={photoIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  src={user.photos[photoIndex]}
+                  className="w-full h-full object-cover pointer-events-none"
+                  alt={user.name}
+                  referrerPolicy="no-referrer"
+                />
+              </AnimatePresence>
 
-            {/* Infos sur la carte */}
-            <div className="absolute bottom-0 left-0 right-0 p-8 pt-32 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
-              <div className="flex items-end justify-between gap-4">
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-4xl font-black text-white tracking-tight leading-none">{user.name}, {user.age}</h2>
-                    {user.verified && (
-                      <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                        <ICONS.CheckCircle2 size={14} className="text-white" />
-                      </div>
-                    )}
-                  </div>
+              {/* 4) Feedback interaction (Stamps) */}
+              <motion.div 
+                style={{ opacity: likeOpacity, scale: useTransform(x, [0, 150], [0.5, 1.2]) }} 
+                className="absolute top-20 left-10 border-4 border-green-500 text-green-500 font-black text-4xl px-6 py-2 rounded-xl rotate-[-20deg] pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(34,197,94,0.3)]"
+              >
+                J'AIME
+              </motion.div>
+              <motion.div 
+                style={{ opacity: nopeOpacity, scale: useTransform(x, [0, -150], [0.5, 1.2]) }} 
+                className="absolute top-20 right-10 border-4 border-red-500 text-red-500 font-black text-4xl px-6 py-2 rounded-xl rotate-[20deg] pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(239,68,68,0.3)]"
+              >
+                NON
+              </motion.div>
+              <motion.div 
+                style={{ opacity: superLikeOpacity, scale: useTransform(y, [0, -150], [0.5, 1.2]) }} 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border-4 border-purple-500 text-purple-500 font-black text-4xl px-6 py-2 rounded-xl pointer-events-none z-30 uppercase tracking-tighter shadow-[0_0_20px_rgba(168,85,247,0.3)]"
+              >
+                SUPER
+              </motion.div>
 
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-white/60 text-[11px] font-bold uppercase tracking-wider">
-                    <div className="flex items-center gap-1.5">
-                      <ICONS.MapPin size={12} className="text-pink-500" />
-                      {user.distance}
-                    </div>
-                    <div className="w-1 h-1 rounded-full bg-white/20" />
-                    <div className="flex items-center gap-1.5">
-                      <ICONS.Languages size={12} className="text-blue-400" />
-                      {user.languages[0]}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1.5">
-                    {user.interests.slice(0, 2).map(interest => (
-                      <span key={interest} className="px-2.5 py-1 rounded-full bg-white/10 border border-white/5 text-[9px] font-black uppercase tracking-widest text-white/80">
-                        {interest}
-                      </span>
-                    ))}
-                    {user.interests.length > 2 && (
-                      <span className="px-2 py-1 rounded-full bg-white/5 text-[9px] font-black text-white/30">
-                        +{user.interests.length - 2}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Compatibility Ring (Visual Score) */}
-                <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
-                  <svg className="w-full h-full -rotate-90">
-                    <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="4" className="text-white/10" />
-                    <motion.circle 
-                      cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="4" 
-                      strokeDasharray="175.9"
-                      initial={{ strokeDashoffset: 175.9 }}
-                      animate={{ strokeDashoffset: 175.9 - (175.9 * user.compatibility) / 100 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
-                      className="text-pink-500"
-                      strokeLinecap="round"
+              {/* Overlay gradient noir en bas */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/10 pointer-events-none" />
+              
+              {/* Progress bar en haut */}
+              <div className="absolute top-4 left-6 right-6 flex gap-1.5 z-20">
+                {user.photos.map((_, i) => (
+                  <div key={i} className="h-[2px] flex-1 rounded-full bg-white/20 overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-white"
+                      initial={{ width: 0 }}
+                      animate={{ width: i === photoIndex ? '100%' : i < photoIndex ? '100%' : '0%' }}
+                      transition={{ duration: 0.3 }}
                     />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-xs font-black text-white leading-none">{user.compatibility}%</span>
-                    <span className="text-[6px] font-bold uppercase tracking-widest text-white/40">Match</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Infos sur la carte */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 pt-32 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none">
+                <div className="flex items-end justify-between gap-4">
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-4xl font-black text-white tracking-tight leading-none">{user.name}, {user.age}</h2>
+                      {user.verified && (
+                        <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                          <ICONS.CheckCircle2 size={14} className="text-white" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-white/60 text-[11px] font-bold uppercase tracking-wider">
+                      <div className="flex items-center gap-1.5">
+                        <ICONS.MapPin size={12} className="text-pink-500" />
+                        {user.distance}
+                      </div>
+                      <div className="w-1 h-1 rounded-full bg-white/20" />
+                      <div className="flex items-center gap-1.5">
+                        <ICONS.Languages size={12} className="text-blue-400" />
+                        {user.languages[0]}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5">
+                      {user.interests.slice(0, 2).map(interest => (
+                        <span key={interest} className="px-2.5 py-1 rounded-full bg-white/10 border border-white/5 text-[9px] font-black uppercase tracking-widest text-white/80">
+                          {interest}
+                        </span>
+                      ))}
+                      {user.interests.length > 2 && (
+                        <span className="px-2 py-1 rounded-full bg-white/5 text-[9px] font-black text-white/30">
+                          +{user.interests.length - 2}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Compatibility Ring (Visual Score) */}
+                  <div className="relative w-16 h-16 flex items-center justify-center shrink-0">
+                    <svg className="w-full h-full -rotate-90">
+                      <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="4" className="text-white/10" />
+                      <motion.circle 
+                        cx="32" cy="32" r="28" fill="none" stroke="currentColor" strokeWidth="4" 
+                        strokeDasharray="175.9"
+                        initial={{ strokeDashoffset: 175.9 }}
+                        animate={{ strokeDashoffset: 175.9 - (175.9 * user.compatibility) / 100 }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="text-pink-500"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-xs font-black text-white leading-none">{user.compatibility}%</span>
+                      <span className="text-[6px] font-bold uppercase tracking-widest text-white/40">Match</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* 3) Actions (zone pouce optimisée) */}
@@ -254,7 +259,7 @@ const SwipeScreen = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-2xl"
+            className="absolute inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-2xl"
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
