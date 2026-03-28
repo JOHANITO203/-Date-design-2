@@ -1,254 +1,140 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
-import { Heart, Star, Sparkles, Eye } from 'lucide-react';
+import { ICONS, MOCK_USERS } from '../types';
+import GlassButton from './ui/GlassButton';
 import { useDevice } from '../hooks/useDevice';
-
-const lockedLikes = [
-  {
-    id: 'lk-1',
-    name: 'Mila',
-    age: 26,
-    city: 'Paris',
-    photo:
-      'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'lk-2',
-    name: 'Lina',
-    age: 24,
-    city: 'Lyon',
-    photo:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'lk-3',
-    name: 'Emma',
-    age: 29,
-    city: 'Marseille',
-    photo:
-      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'lk-4',
-    name: 'Nora',
-    age: 27,
-    city: 'Toulouse',
-    photo:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'lk-5',
-    name: 'Lea',
-    age: 25,
-    city: 'Nice',
-    photo:
-      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'lk-6',
-    name: 'Yasmin',
-    age: 30,
-    city: 'Bordeaux',
-    photo:
-      'https://images.unsplash.com/photo-1546961329-78bef0414d7c?auto=format&fit=crop&w=1200&q=80',
-  },
-];
+import { useNavigate } from 'react-router-dom';
 
 const MatchesScreen: React.FC = () => {
   const { isDesktop, isTablet } = useDevice();
   const isLarge = isDesktop || isTablet;
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const sectionRefs = useRef<Array<HTMLElement | null>>([]);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [scrollThumb, setScrollThumb] = useState(28);
-
-  useEffect(() => {
-    const node = scrollRef.current;
-    if (!isLarge || !node) return;
-
-    const updateScroll = () => {
-      const max = node.scrollHeight - node.clientHeight;
-      const progress = max <= 0 ? 0 : node.scrollTop / max;
-      const size = node.scrollHeight <= 0 ? 100 : (node.clientHeight / node.scrollHeight) * 100;
-      setScrollProgress(Math.min(1, Math.max(0, progress)));
-      setScrollThumb(Math.max(20, Math.min(100, size)));
-    };
-
-    updateScroll();
-    node.addEventListener('scroll', updateScroll);
-    window.addEventListener('resize', updateScroll);
-
-    return () => {
-      node.removeEventListener('scroll', updateScroll);
-      window.removeEventListener('resize', updateScroll);
-    };
-  }, [isLarge]);
-
-  const jumpToSection = (index: number) => {
-    const node = sectionRefs.current[index];
-    if (!node) return;
-    node.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  const navigate = useNavigate();
 
   return (
-    <div ref={scrollRef} className="relative group/likes h-full overflow-y-auto no-scrollbar py-6 pb-nav">
-      <div className="container-wide px-[var(--page-x)] layout-stack">
-        <header
-          ref={(el) => {
-            sectionRefs.current[0] = el;
-          }}
-          className="flex items-end justify-between gap-4"
-        >
-          <div>
-            <h1 className="fluid-title font-black tracking-tight">Vos Likes</h1>
-            <p className="text-secondary fluid-subtitle">Voyez qui s'interesse a vous et debloquez les profils en un geste.</p>
-          </div>
-          <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-full glass border border-pink-500/20">
-            <Sparkles size={14} className="text-pink-400" />
-            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-pink-300">Nouveaux likes: 24</span>
-          </div>
-        </header>
-
-        {isLarge ? (
-          <div
-            ref={(el) => {
-              sectionRefs.current[1] = el;
-            }}
-            className="grid grid-cols-[minmax(0,1fr)_19rem] xl:grid-cols-[minmax(0,1fr)_22rem] gap-5 items-start"
-          >
-            <section className="grid grid-cols-2 xl:grid-cols-3 gap-[var(--grid-gap)]">
-              {lockedLikes.map((like, index) => (
-                <motion.article
-                  key={like.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.04 }}
-                  className="relative overflow-hidden rounded-[var(--card-radius)] border border-white/10 bg-white/[0.03] aspect-[3/4]"
-                >
-                  <img src={like.photo} alt={like.name} className="absolute inset-0 w-full h-full object-cover object-center scale-105" referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-black/45 backdrop-blur-md" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/20" />
-
-                  <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/50 border border-white/20 text-[10px] font-black uppercase tracking-wider text-white/80">
-                    Verrouille
-                  </div>
-
-                  <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#FF1493] to-[#00BFFF] flex items-center justify-center mb-3 shadow-lg shadow-pink-500/30">
-                      <Heart size={24} fill="white" />
-                    </div>
-                    <p className="text-sm font-semibold text-white">Debloquez pour voir ce profil</p>
-                    <p className="text-xs text-white/50 mt-1">{like.city}</p>
-                  </div>
-
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white/70">
-                    <span className="text-sm font-bold blur-sm">{like.name}, {like.age}</span>
-                    <Eye size={16} className="text-white/50" />
-                  </div>
-                </motion.article>
-              ))}
-            </section>
-
-            <aside
-              ref={(el) => {
-                sectionRefs.current[2] = el;
-              }}
-              className="layout-stack"
-            >
-              <section className="glass rounded-[var(--card-radius)] p-5 border border-white/10">
-                <div className="inline-flex p-2 rounded-xl bg-white/5 mb-3">
-                  <Star className="text-[#FFD166]" fill="#FFD166" size={18} />
-                </div>
-                <h2 className="text-2xl font-black tracking-tight mb-2">Passez Premium</h2>
-                <p className="text-secondary text-sm leading-relaxed mb-5">
-                  Voyez tous vos likes, matchez instantanement et boostez votre visibilite.
-                </p>
-                <button className="w-full h-[var(--cta-height)] rounded-2xl gradient-premium text-white font-black uppercase tracking-[0.15em] text-[11px]">
-                  Debloquer mes likes
-                </button>
-              </section>
-
-              <section className="glass rounded-[var(--card-radius)] p-5 border border-white/10 space-y-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-black">Inclut</p>
-                {[
-                  'Voir tous les likes recus',
-                  'Likes illimites',
-                  'Filtres avances',
-                  'Boost hebdomadaire',
-                ].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-sm text-white/80">
-                    <div className="w-1.5 h-1.5 rounded-full bg-pink-400" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </section>
-            </aside>
-          </div>
-        ) : (
-          <>
-            <section className="grid grid-cols-2 gap-[var(--grid-gap)]">
-              {lockedLikes.slice(0, 4).map((like, index) => (
-                <motion.article
-                  key={like.id}
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="relative overflow-hidden rounded-[var(--card-radius)] border border-white/10 bg-white/[0.03] aspect-[3/4]"
-                >
-                  <img src={like.photo} alt={like.name} className="absolute inset-0 w-full h-full object-cover object-center scale-105" referrerPolicy="no-referrer" />
-                  <div className="absolute inset-0 bg-black/45 backdrop-blur-md" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
-                    <div className="w-11 h-11 rounded-full bg-gradient-to-r from-[#FF1493] to-[#00BFFF] flex items-center justify-center mb-2">
-                      <Heart size={22} fill="white" />
-                    </div>
-                    <p className="text-xs font-semibold text-white">Debloquez pour voir</p>
-                  </div>
-                </motion.article>
-              ))}
-            </section>
-
-            <section className="glass p-6 rounded-[var(--card-radius)] border border-white/10 text-center">
-              <div className="inline-flex p-3 rounded-2xl bg-white/5 mb-4">
-                <Star className="text-[#FFD166]" fill="#FFD166" />
-              </div>
-              <h2 className="text-xl font-black mb-2">Passez Premium</h2>
-              <p className="text-secondary text-sm mb-6">Voyez tous vos likes et matchez instantanement.</p>
-              <button className="w-full h-[var(--cta-height)] rounded-2xl gradient-premium text-white font-black uppercase tracking-[0.15em] text-[11px]">
-                Debloquer
-              </button>
-            </section>
-          </>
-        )}
-      </div>
-      {isLarge && (
-        <div className="fixed right-0 top-0 bottom-0 w-14 z-30 pointer-events-none">
-          <div className="group/likes-rail h-full w-full flex items-center justify-center pointer-events-auto">
-            <div className="flex items-center opacity-0 transition-opacity duration-300 group-hover/likes-rail:opacity-100">
-              <div className="rounded-full p-[1px] bg-gradient-to-b from-pink-500 via-fuchsia-500 to-blue-500 shadow-[0_0_14px_rgba(217,70,239,0.33)]">
-                <div className="relative w-2.5 h-40 rounded-full bg-[#09090c]/95 overflow-hidden">
-                  <div
-                    className="absolute left-0.5 right-0.5 rounded-full bg-gradient-to-b from-pink-400 via-fuchsia-400 to-blue-400"
-                    style={{
-                      height: `${scrollThumb}%`,
-                      top: `${scrollProgress * (100 - scrollThumb)}%`,
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="ml-2 flex flex-col gap-2">
-                {[0, 1, 2].map((index) => (
-                  <button
-                    key={`likes-jump-${index}`}
-                    onClick={() => jumpToSection(index)}
-                    className="w-2 h-2 rounded-full bg-white/35 hover:bg-pink-300 transition-colors"
-                    aria-label={`Aller a la section likes ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
+    <div className="min-h-full bg-black text-white p-6 pb-24 overflow-y-auto no-scrollbar font-sans">
+      {/* 1) Header */}
+      <header className="flex items-center justify-between mb-10 shrink-0">
+        <div className="flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 leading-none mb-1">Activité</span>
+          <h1 className="text-3xl font-black italic uppercase tracking-tighter text-white leading-none">Tes Likes</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center gap-2">
+            <ICONS.Likes size={12} className="text-pink-500" fill="currentColor" />
+            <span className="text-[10px] font-black text-pink-500">24 Nouveaux</span>
           </div>
         </div>
-      )}
+      </header>
+
+      {/* 2) Grid of Blurred Cards */}
+      <div className={`grid gap-4 ${isLarge ? 'grid-cols-3 lg:grid-cols-4' : 'grid-cols-2'}`}>
+        {MOCK_USERS.slice(0, 6).map((user, i) => (
+          <motion.div 
+            key={user.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05 }}
+            className="aspect-[3/4] rounded-[32px] bg-zinc-900 border border-white/5 overflow-hidden relative group cursor-pointer"
+          >
+            {/* Blurred Image */}
+            <img 
+              src={user.photos[0]} 
+              className="w-full h-full object-cover blur-xl grayscale-[0.3] opacity-40 scale-110 transition-transform duration-700 group-hover:scale-125" 
+              alt="Blurred profile" 
+              referrerPolicy="no-referrer"
+            />
+            
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+            {/* Content Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center z-10">
+              <div className="w-12 h-12 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-3 shadow-2xl group-hover:scale-110 transition-transform">
+                <ICONS.Likes size={24} className="text-pink-500" fill="currentColor" />
+              </div>
+              <div className="space-y-1">
+                <div className="h-2 w-16 bg-white/20 rounded-full mx-auto animate-pulse" />
+                <div className="h-2 w-10 bg-white/10 rounded-full mx-auto" />
+              </div>
+            </div>
+
+            {/* Compatibility Badge (Blurred) */}
+            <div className="absolute top-4 right-4 px-2 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-[8px] font-black uppercase tracking-widest text-white/40">
+              ??% Match
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* 3) Premium Call-to-Action */}
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-12 relative overflow-hidden rounded-[40px] border border-white/10 shadow-2xl group"
+      >
+        {/* Atmospheric Background */}
+        <div className="absolute inset-0 bg-zinc-900" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-pink-500/20 blur-[80px] rounded-full group-hover:bg-pink-500/30 transition-colors duration-700" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/20 blur-[80px] rounded-full group-hover:bg-blue-500/30 transition-colors duration-700" />
+
+        <div className="relative z-10 p-10 text-center space-y-8">
+          <div className="inline-flex p-4 rounded-3xl bg-white/5 border border-white/10 shadow-xl">
+            <ICONS.Sparkles className="text-amber-400" size={32} />
+          </div>
+          
+          <div className="space-y-3">
+            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white leading-none">
+              Découvre qui t'aime
+            </h2>
+            <p className="text-white/40 text-sm max-w-[280px] mx-auto leading-relaxed font-medium">
+              Ne perds plus de temps à swiper. Découvre instantanément tous tes admirateurs secrets.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <GlassButton 
+              variant="premium" 
+              className="w-full py-5 text-sm font-black uppercase tracking-[0.3em] shadow-2xl shadow-pink-500/20"
+              onClick={() => navigate('/boost')}
+            >
+              Passer à VIBE Gold
+            </GlassButton>
+            <p className="text-[10px] text-white/20 uppercase tracking-widest font-bold">
+              À partir de 19,99 € / mois • Annulable à tout moment
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 4) Recent Matches Section */}
+      <section className="mt-16 space-y-6">
+        <div className="flex items-center justify-between px-2">
+          <h3 className="text-lg font-black italic uppercase tracking-tight">Matches Récents</h3>
+          <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest cursor-pointer hover:text-white transition-colors">Voir tout</span>
+        </div>
+
+        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+          {MOCK_USERS.slice(0, 5).map((user, i) => (
+            <motion.div 
+              key={`match-${user.id}`}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="shrink-0 flex flex-col items-center gap-3"
+            >
+              <div className="relative">
+                <div className="w-20 h-20 rounded-[28px] border-2 border-white/10 overflow-hidden shadow-xl p-0.5 bg-gradient-to-br from-pink-500/20 to-blue-500/20">
+                  <img src={user.photos[0]} className="w-full h-full object-cover rounded-[24px]" alt={user.name} referrerPolicy="no-referrer" />
+                </div>
+                {i === 0 && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-black shadow-lg" />
+                )}
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{user.name}</span>
+            </motion.div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

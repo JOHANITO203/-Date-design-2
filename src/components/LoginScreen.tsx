@@ -2,6 +2,7 @@ import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { ICONS } from '../types';
 import GlassButton from './ui/GlassButton';
+import Logo from './ui/Logo';
 
 const LoginScreen = () => {
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ const LoginScreen = () => {
         <ICONS.ChevronLeft size={20} />
       </button>
 
-      <div className="mt-12 mb-12">
+      <div className="mt-12 mb-12 flex flex-col items-center text-center">
+        <Logo size={60} className="mb-8" />
         <h1 className="text-4xl font-bold tracking-tight mb-4">Bon retour.</h1>
         <p className="text-white/60 text-lg">Connectez-vous pour retrouver vos matches.</p>
       </div>

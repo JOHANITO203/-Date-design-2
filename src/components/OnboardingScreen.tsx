@@ -3,8 +3,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { ICONS } from '../types';
 import GlassButton from './ui/GlassButton';
-import { useDevice } from '../hooks/useDevice';
-import { useKeyboardInset } from '../hooks/useKeyboardInset';
 
 const ZODIAC_SIGNS = [
   { name: 'Bélier', symbol: '♈', start: [3, 21], end: [4, 19] },
@@ -39,8 +37,6 @@ const getZodiacSign = (dateString: string) => {
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
-  const { isTouch } = useDevice();
-  const { keyboardInset, isKeyboardOpen } = useKeyboardInset(isTouch);
   const [step, setStep] = useState(1);
   const [birthDate, setBirthDate] = useState('');
   const [zodiac, setZodiac] = useState<{ name: string, symbol: string } | null>(null);
@@ -57,9 +53,9 @@ const OnboardingScreen = () => {
   };
 
   return (
-    <div className="screen-safe h-full w-full flex flex-col px-[var(--page-x)] pt-10 md:pt-14 overflow-hidden bg-black">
+    <div className="h-full w-full flex flex-col p-6 sm:p-8 pt-12 sm:pt-16 overflow-hidden bg-black">
       {/* Progress Bar */}
-      <div className="container-content w-full mx-auto flex gap-2 mb-8 sm:mb-12 shrink-0">
+      <div className="flex gap-2 mb-8 sm:mb-12 shrink-0">
         {Array.from({ length: totalSteps }).map((_, i) => (
           <div 
             key={i} 
@@ -68,10 +64,7 @@ const OnboardingScreen = () => {
         ))}
       </div>
 
-      <div
-        className="container-content w-full mx-auto flex-1 overflow-y-auto no-scrollbar min-h-0"
-        style={isTouch ? { paddingBottom: `calc(${isKeyboardOpen ? `${keyboardInset}px + ` : ''}0.75rem)` } : undefined}
-      >
+      <div className="flex-1 overflow-y-auto no-scrollbar min-h-0">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div 
@@ -209,7 +202,7 @@ const OnboardingScreen = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.1 }}
-              className="flex-1 text-center flex flex-col items-center justify-center relative min-h-0 py-4 sm:py-6 md:py-8 gap-6 sm:gap-7 md:gap-8"
+              className="flex-1 space-y-8 text-center flex flex-col items-center justify-center relative"
             >
               {/* Celebration Particles */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -251,10 +244,10 @@ const OnboardingScreen = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
-                className="relative shrink-0"
+                className="relative"
               >
-                <div className="w-[clamp(5.75rem,11vw,8rem)] h-[clamp(5.75rem,11vw,8rem)] gradient-premium rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(236,72,153,0.3)] relative z-10">
-                  <ICONS.CheckCircle2 className="text-white w-[clamp(2.75rem,5vw,4rem)] h-[clamp(2.75rem,5vw,4rem)]" />
+                <div className="w-24 h-24 sm:w-32 sm:h-32 gradient-premium rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(236,72,153,0.3)] relative z-10">
+                  <ICONS.CheckCircle2 size={48} sm:size={64} className="text-white" />
                 </div>
                 {/* Outer rings */}
                 <motion.div 
@@ -269,16 +262,16 @@ const OnboardingScreen = () => {
                 />
               </motion.div>
 
-              <div className="space-y-3 sm:space-y-4 relative z-10 max-w-[36rem]">
+              <div className="space-y-4 relative z-10">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <span className="inline-block px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 sm:mb-4">
+                  <span className="inline-block px-4 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
                     Profil Certifié Premium
                   </span>
-                  <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                  <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
                     Félicitations !
                   </h2>
                 </motion.div>
@@ -287,7 +280,7 @@ const OnboardingScreen = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
-                  className="text-white/50 text-[1.05rem] sm:text-[1.15rem] max-w-[26ch] sm:max-w-[30ch] md:max-w-[34ch] mx-auto leading-[1.55] px-2 sm:px-0"
+                  className="text-white/50 text-base sm:text-lg max-w-xs mx-auto leading-relaxed"
                 >
                   Votre voyage commence maintenant. Préparez-vous à vivre des rencontres inoubliables.
                 </motion.p>
@@ -313,10 +306,7 @@ const OnboardingScreen = () => {
         </AnimatePresence>
       </div>
 
-      <div
-        className="container-content w-full mx-auto mt-6 pb-safe shrink-0"
-        style={isTouch && isKeyboardOpen ? { marginBottom: `${keyboardInset}px` } : undefined}
-      >
+      <div className="mt-6 shrink-0">
         <GlassButton variant="premium" onClick={nextStep} className="w-full py-4 sm:py-5 text-lg font-bold">
           {step === totalSteps ? 'Terminer' : 'Continuer'}
         </GlassButton>
