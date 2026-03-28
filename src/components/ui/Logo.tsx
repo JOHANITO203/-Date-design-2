@@ -9,9 +9,9 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ className = "", size = 40, showText = true }) => {
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className={`flex items-center gap-2 md:gap-3 ${className}`}>
       <motion.div 
-        className="relative"
+        className="relative shrink-0"
         style={{ width: size, height: size }}
         whileHover={{ scale: 1.05 }}
       >
@@ -62,14 +62,14 @@ const Logo: React.FC<LogoProps> = ({ className = "", size = 40, showText = true 
       {showText && (
         <div className="flex flex-col">
           <motion.span 
-            className="text-2xl font-black italic uppercase tracking-tighter leading-none text-white"
+            className="text-xl md:text-2xl font-black italic uppercase tracking-tighter leading-none text-white"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
           >
             Swipe
           </motion.span>
-          <span className="text-[8px] font-black uppercase tracking-[0.4em] text-pink-500 leading-none mt-1">
-            Premium Dating
+          <span className="text-[7px] md:text-[8px] font-black uppercase tracking-[0.4em] text-pink-500 leading-none mt-1">
+            Exotique Dating
           </span>
         </div>
       )}
