@@ -5,32 +5,783 @@
   --color-premium-end: #00BFFF;
   --color-boost-start: #FF8C00;
   --color-boost-end: #FFD166;
-  --color-surface: rgba(255, 255, 255, 0.05);
-  --color-surface-border: rgba(255, 255, 255, 0.1);
+    --color-surface: rgba(255, 255, 255, 0.05);
+    --color-surface-border: rgba(255, 255, 255, 0.1);
+    --menu-premium-gray: rgba(18, 20, 26, 0.9);
+    --menu-premium-border: rgba(255, 255, 255, 0.12);
+    --filters-stack-bg: rgba(26, 30, 39, 0.72);
+    --filters-chip-bg: rgba(255, 255, 255, 0.06);
+    --filters-chip-border: rgba(255, 255, 255, 0.16);
   --radius-card: 32px;
   --radius-button: 24px;
 }
 
 @layer base {
   :root {
-    /* Adaptive Spacing & Radius */
-    --app-padding: 1.5rem;
-    --card-radius: 24px;
-    --touch-target: 44px;
+    /* Business breakpoint aliases (documentation/hooks) */
+    --bp-mobile-small-max: 29.9375rem; /* 479px */
+    --bp-mobile-min: 30rem; /* 480px */
+    --bp-tablet-min: 48rem; /* 768px */
+    --bp-desktop-min: 64rem; /* 1024px */
+    --bp-wide-min: 90rem; /* 1440px */
+
+    /* Layout tokens */
+    --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-family-display: var(--font-family-base);
+    --page-x: 1rem;
+    --section-gap: 1.5rem;
+    --card-gap: 0.75rem;
+    --grid-gap: 0.75rem;
+    --card-radius: 1.25rem;
+    --icon-size: 1.25rem;
+    --avatar-size: 3.5rem;
+    --cta-height: 3rem;
+    --header-height: 4rem;
+    --bottom-nav-height: 5.25rem;
+    --safe-bottom-offset: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+    --content-max-width: 40rem;
+    --content-max-width-wide: 75rem;
+    --container-reading: 42rem;
+    --container-form: 36rem;
+    --container-chat: 52rem;
+    --container-deck: 36rem;
+    --container-dashboard: 80rem;
+    --container-commerce: 80rem;
+    --container-immersive: 90rem;
+    --panel-width-sm: 16rem;
+    --panel-width-md: 20rem;
+    --panel-width-lg: 22rem;
+    --discover-header-top: 1.5rem;
+    --discover-card-h: min(62dvh, 28rem);
+    --discover-overlay-pad: 2rem;
+    --discover-overlay-top: 8rem;
+    --discover-identity-top: 4.875rem;
+    --discover-name-size: 2.25rem;
+    --discover-title-size: 2rem;
+    --discover-action-size: 4rem;
+    --discover-action-main-size: 3.5rem;
+    --discover-action-gap: 1.25rem;
+    --discover-action-mobile-w: 2.75rem;
+    --discover-action-mobile-h: 2.25rem;
+    --discover-action-mobile-radius: 0.75rem;
+    --discover-action-mobile-main-w: 3rem;
+    --discover-action-mobile-main-h: 2.5rem;
+    --discover-action-mobile-main-radius: 1rem;
+    --discover-verified-size: 1.5rem;
+    --discover-compat-size: 3.5rem;
+    --discover-compat-value-size: 0.88rem;
+    --discover-compat-label-size: 0.42rem;
+    --discover-mobile-filter-gap: 0.375rem;
+    --discover-mobile-filter-px: 0.625rem;
+    --discover-mobile-filter-py: 0.3rem;
+    --name-xl: 2.25rem;
+    --name-lg: 1.05rem;
+    --name-md: 0.95rem;
+    --name-badge-gap: 0.4rem;
+    --verified-badge-size: 1.35rem;
+    --messages-header-top: 1rem;
+    --messages-header-gap: 1.25rem;
+    --messages-title-size: 2.15rem;
+    --messages-settings-pad: 0.5rem;
+    --messages-matches-section-gap: 1.5rem;
+    --messages-matches-gap: 0.75rem;
+    --messages-match-avatar: 3.5rem;
+    --messages-conv-gap: 0.5rem;
+    --messages-conv-bottom-pad: 0.5rem;
+    --messages-conv-card-gap: 0.75rem;
+    --messages-conv-card-pad: 0.75rem;
+    --messages-conv-card-radius: 1.5rem;
+    --messages-conv-avatar: 3rem;
+    --messages-conv-avatar-radius: 1rem;
+    --messages-conv-name-size: 1.05rem;
+    --messages-conv-preview-size: 0.6875rem;
+    --messages-zone-bg: rgba(22, 25, 33, 0.62);
+    --messages-zone-border: rgba(255, 255, 255, 0.1);
+    --messages-selected-bg: linear-gradient(135deg, rgba(255, 20, 147, 0.22), rgba(0, 191, 255, 0.14));
+    --messages-selected-border: rgba(255, 20, 147, 0.42);
+    --boost-page-y: 1.5rem;
+    --boost-mobile-section-gap: 1rem;
+    --boost-hero-pad: 1rem;
+    --boost-hero-icon-box: 4rem;
+    --boost-title-size: 2.25rem;
+    --boost-desc-size: 0.9rem;
+    --boost-cta-h: 2.75rem;
+    --content-safe-extra: 1rem;
+
+    /* Typography */
+    --text-xs: clamp(0.75rem, 0.72rem + 0.1vw, 0.8rem);
+    --text-sm: clamp(0.875rem, 0.82rem + 0.15vw, 0.95rem);
+    --text-base: clamp(1rem, 0.95rem + 0.2vw, 1.1rem);
+    --text-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.35rem);
+    --text-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    --text-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --text-3xl: clamp(2rem, 1.6rem + 1.5vw, 3rem);
+
+    /* Misc */
+    --touch-target: 2.75rem;
+    --density-compact-gap: 0.75rem;
+    --density-comfortable-gap: 1.25rem;
+    --density-immersive-gap: 2rem;
   }
 
-  @media (min-width: 768px) {
+  @media (max-width: 29.9375rem) {
     :root {
-      --app-padding: 2rem;
-      --card-radius: 32px;
-      --touch-target: 48px;
+      --page-x: 0.875rem;
+      --section-gap: 1.25rem;
+      --card-gap: 0.625rem;
+      --grid-gap: 0.625rem;
+      --card-radius: 1.125rem;
+      --icon-size: 1.125rem;
+      --avatar-size: 3.25rem;
+      --cta-height: 2.875rem;
+      --content-max-width: 36rem;
+      --discover-header-top: 1.125rem;
+      --discover-card-h: min(56dvh, 24rem);
+      --discover-overlay-pad: 1rem;
+      --discover-overlay-top: 4.75rem;
+      --discover-identity-top: 3.2rem;
+      --discover-name-size: 1.5rem;
+      --discover-title-size: 1.875rem;
+      --discover-action-size: 3.5rem;
+      --discover-action-main-size: 3.125rem;
+      --discover-action-gap: 0.875rem;
+      --discover-action-mobile-w: 2.75rem;
+      --discover-action-mobile-h: 2.2rem;
+      --discover-action-mobile-radius: 0.75rem;
+      --discover-action-mobile-main-w: 3rem;
+      --discover-action-mobile-main-h: 2.45rem;
+      --discover-action-mobile-main-radius: 0.95rem;
+      --discover-verified-size: 1.5rem;
+      --discover-compat-size: 3.35rem;
+      --discover-compat-value-size: 0.84rem;
+      --discover-compat-label-size: 0.4rem;
+      --discover-mobile-filter-gap: 0.35rem;
+      --discover-mobile-filter-px: 0.55rem;
+      --discover-mobile-filter-py: 0.28rem;
+      --name-xl: 2rem;
+      --name-lg: 1rem;
+      --name-md: 0.9rem;
+      --verified-badge-size: 1.3rem;
+      --messages-header-top: 0.9rem;
+      --messages-header-gap: 1rem;
+      --messages-title-size: 2.05rem;
+      --messages-settings-pad: 0.45rem;
+      --messages-matches-section-gap: 1.25rem;
+      --messages-matches-gap: 0.7rem;
+      --messages-match-avatar: 3.35rem;
+      --messages-conv-gap: 0.5rem;
+      --messages-conv-bottom-pad: 0.4rem;
+      --messages-conv-card-gap: 0.7rem;
+      --messages-conv-card-pad: 0.7rem;
+      --messages-conv-card-radius: 1.35rem;
+      --messages-conv-avatar: 2.85rem;
+      --messages-conv-avatar-radius: 0.95rem;
+      --messages-conv-name-size: 1rem;
+      --messages-conv-preview-size: 0.66rem;
+      --boost-page-y: 1.25rem;
+      --boost-mobile-section-gap: 0.9rem;
+      --boost-hero-pad: 0.95rem;
+      --boost-hero-icon-box: 3.75rem;
+      --boost-title-size: 2.05rem;
+      --boost-desc-size: 0.86rem;
+      --boost-cta-h: 2.65rem;
+    }
+  }
+
+  @media (max-height: 40rem) {
+    :root {
+      --discover-header-top: 1rem;
+      --discover-card-h: min(64dvh, 24.5rem);
+      --discover-overlay-pad: 0.875rem;
+      --discover-overlay-top: 5rem;
+      --discover-identity-top: 2.85rem;
+      --discover-name-size: 1.875rem;
+      --discover-title-size: 1.75rem;
+      --discover-action-size: 2.625rem;
+      --discover-action-main-size: 2.375rem;
+      --discover-action-gap: 0.75rem;
+      --discover-action-mobile-w: 2.65rem;
+      --discover-action-mobile-h: 2.1rem;
+      --discover-action-mobile-radius: 0.7rem;
+      --discover-action-mobile-main-w: 2.85rem;
+      --discover-action-mobile-main-h: 2.3rem;
+      --discover-action-mobile-main-radius: 0.9rem;
+      --discover-verified-size: 1.5rem;
+      --discover-compat-size: 3.2rem;
+      --discover-compat-value-size: 0.8rem;
+      --discover-compat-label-size: 0.38rem;
+      --discover-mobile-filter-gap: 0.3rem;
+      --discover-mobile-filter-px: 0.5rem;
+      --discover-mobile-filter-py: 0.25rem;
+      --name-xl: 1.95rem;
+      --name-lg: 0.95rem;
+      --name-md: 0.88rem;
+      --verified-badge-size: 1.25rem;
+      --messages-header-top: 0.85rem;
+      --messages-header-gap: 0.95rem;
+      --messages-title-size: 2rem;
+      --messages-settings-pad: 0.42rem;
+      --messages-matches-section-gap: 1.1rem;
+      --messages-matches-gap: 0.65rem;
+      --messages-match-avatar: 3.2rem;
+      --messages-conv-gap: 0.45rem;
+      --messages-conv-bottom-pad: 0.25rem;
+      --messages-conv-card-gap: 0.65rem;
+      --messages-conv-card-pad: 0.65rem;
+      --messages-conv-card-radius: 1.25rem;
+      --messages-conv-avatar: 2.75rem;
+      --messages-conv-avatar-radius: 0.85rem;
+      --messages-conv-name-size: 0.95rem;
+      --messages-conv-preview-size: 0.64rem;
+      --boost-page-y: 1rem;
+      --boost-mobile-section-gap: 0.8rem;
+      --boost-hero-pad: 0.875rem;
+      --boost-hero-icon-box: 3.5rem;
+      --boost-title-size: 1.95rem;
+      --boost-desc-size: 0.82rem;
+      --boost-cta-h: 2.5rem;
+      --content-safe-extra: 0.25rem;
+    }
+  }
+
+  /* Baseline lock: mobile-small reference viewport 320x560 */
+  @media (max-width: 20rem) and (max-height: 35rem) {
+    :root {
+      --page-x: 0.875rem;
+      --discover-header-top: 1rem;
+      --discover-card-h: 22.5rem;
+      --discover-overlay-pad: 0.875rem;
+      --discover-overlay-top: 5rem;
+      --discover-identity-top: 2.85rem;
+      --discover-name-size: 2.125rem;
+      --discover-title-size: 1.75rem;
+      --discover-action-gap: 0.7rem;
+      --discover-action-mobile-w: 2.65rem;
+      --discover-action-mobile-h: 2.1rem;
+      --discover-action-mobile-radius: 0.7rem;
+      --discover-action-mobile-main-w: 2.85rem;
+      --discover-action-mobile-main-h: 2.3rem;
+      --discover-action-mobile-main-radius: 0.9rem;
+      --discover-verified-size: 1.5rem;
+      --discover-compat-size: 3.2rem;
+      --discover-compat-value-size: 0.8rem;
+      --discover-compat-label-size: 0.38rem;
+      --discover-mobile-filter-gap: 0.3rem;
+      --discover-mobile-filter-px: 0.5rem;
+      --discover-mobile-filter-py: 0.25rem;
+      --name-xl: 2.125rem;
+      --name-lg: 0.95rem;
+      --name-md: 0.88rem;
+      --verified-badge-size: 1.25rem;
+      --messages-header-top: 0.85rem;
+      --messages-header-gap: 0.95rem;
+      --messages-title-size: 2rem;
+      --messages-settings-pad: 0.42rem;
+      --messages-matches-section-gap: 1.1rem;
+      --messages-matches-gap: 0.65rem;
+      --messages-match-avatar: 3.2rem;
+      --messages-conv-gap: 0.45rem;
+      --messages-conv-bottom-pad: 0.25rem;
+      --messages-conv-card-gap: 0.65rem;
+      --messages-conv-card-pad: 0.65rem;
+      --messages-conv-card-radius: 1.25rem;
+      --messages-conv-avatar: 2.75rem;
+      --messages-conv-avatar-radius: 0.85rem;
+      --messages-conv-name-size: 0.95rem;
+      --messages-conv-preview-size: 0.64rem;
+      --boost-page-y: 1rem;
+      --boost-mobile-section-gap: 0.8rem;
+      --boost-hero-pad: 0.875rem;
+      --boost-hero-icon-box: 3.5rem;
+      --boost-title-size: 1.95rem;
+      --boost-desc-size: 0.82rem;
+      --boost-cta-h: 2.5rem;
+      --content-safe-extra: 0.25rem;
+    }
+  }
+
+  /* Discover scaling presets by target mobile widths (position set preserved) */
+  @media (min-width: 22.5rem) and (max-width: 24.374rem) {
+    :root {
+      --page-x: 0.95rem;
+      --section-gap: 1.35rem;
+      --card-gap: 0.7rem;
+      --grid-gap: 0.7rem;
+      --card-radius: 1.2rem;
+      --cta-height: 3rem;
+      --discover-card-h: min(66dvh, 25rem);
+      --discover-overlay-top: 5.35rem;
+      --discover-identity-top: 3.45rem;
+      --discover-name-size: 2.25rem;
+      --discover-title-size: 2rem;
+      --discover-compat-size: 3.4rem;
+      --discover-compat-value-size: 0.86rem;
+      --discover-compat-label-size: 0.4rem;
+      --discover-mobile-filter-gap: 0.35rem;
+      --discover-mobile-filter-px: 0.6rem;
+      --discover-mobile-filter-py: 0.28rem;
+      --name-xl: 2.25rem;
+      --name-lg: 1rem;
+      --name-md: 0.92rem;
+      --verified-badge-size: 1.3rem;
+      --discover-action-mobile-w: 2.85rem;
+      --discover-action-mobile-h: 2.2rem;
+      --discover-action-mobile-main-w: 3.05rem;
+      --discover-action-mobile-main-h: 2.4rem;
+      --messages-title-size: 2.2rem;
+      --messages-match-avatar: 3.45rem;
+      --messages-matches-gap: 0.75rem;
+      --messages-conv-card-pad: 0.72rem;
+      --messages-conv-avatar: 2.9rem;
+      --messages-conv-name-size: 1rem;
+      --messages-conv-preview-size: 0.67rem;
+      --boost-page-y: 1.1rem;
+      --boost-mobile-section-gap: 0.9rem;
+      --boost-hero-pad: 0.95rem;
+      --boost-hero-icon-box: 3.75rem;
+      --boost-title-size: 2.1rem;
+      --boost-desc-size: 0.86rem;
+      --boost-cta-h: 2.65rem;
+      --content-safe-extra: 0.5rem;
+    }
+  }
+
+  @media (min-width: 24.375rem) and (max-width: 25.749rem) {
+    :root {
+      --page-x: 1rem;
+      --section-gap: 1.45rem;
+      --card-gap: 0.75rem;
+      --grid-gap: 0.75rem;
+      --card-radius: 1.25rem;
+      --cta-height: 3.05rem;
+      --discover-card-h: min(67dvh, 26rem);
+      --discover-overlay-top: 5.5rem;
+      --discover-identity-top: 3.6rem;
+      --discover-name-size: 2.35rem;
+      --discover-title-size: 2.05rem;
+      --discover-compat-size: 3.5rem;
+      --discover-compat-value-size: 0.9rem;
+      --discover-compat-label-size: 0.42rem;
+      --discover-mobile-filter-gap: 0.4rem;
+      --discover-mobile-filter-px: 0.65rem;
+      --discover-mobile-filter-py: 0.3rem;
+      --name-xl: 2.35rem;
+      --name-lg: 1.04rem;
+      --name-md: 0.94rem;
+      --verified-badge-size: 1.35rem;
+      --discover-action-mobile-w: 2.95rem;
+      --discover-action-mobile-h: 2.25rem;
+      --discover-action-mobile-main-w: 3.2rem;
+      --discover-action-mobile-main-h: 2.5rem;
+      --messages-title-size: 2.3rem;
+      --messages-match-avatar: 3.6rem;
+      --messages-matches-gap: 0.8rem;
+      --messages-conv-card-pad: 0.76rem;
+      --messages-conv-avatar: 3rem;
+      --messages-conv-name-size: 1.02rem;
+      --messages-conv-preview-size: 0.68rem;
+      --boost-page-y: 1.2rem;
+      --boost-mobile-section-gap: 0.95rem;
+      --boost-hero-pad: 1rem;
+      --boost-hero-icon-box: 3.95rem;
+      --boost-title-size: 2.2rem;
+      --boost-desc-size: 0.88rem;
+      --boost-cta-h: 2.75rem;
+      --content-safe-extra: 0.6rem;
+    }
+  }
+
+  @media (min-width: 25.75rem) and (max-width: 26.874rem) {
+    :root {
+      --page-x: 1.05rem;
+      --section-gap: 1.5rem;
+      --card-gap: 0.78rem;
+      --grid-gap: 0.78rem;
+      --card-radius: 1.3rem;
+      --cta-height: 3.1rem;
+      --discover-card-h: min(68dvh, 27rem);
+      --discover-overlay-top: 5.75rem;
+      --discover-identity-top: 3.85rem;
+      --discover-name-size: 2.45rem;
+      --discover-title-size: 2.1rem;
+      --discover-compat-size: 3.65rem;
+      --discover-compat-value-size: 0.95rem;
+      --discover-compat-label-size: 0.44rem;
+      --discover-mobile-filter-gap: 0.42rem;
+      --discover-mobile-filter-px: 0.7rem;
+      --discover-mobile-filter-py: 0.32rem;
+      --name-xl: 2.45rem;
+      --name-lg: 1.08rem;
+      --name-md: 0.96rem;
+      --verified-badge-size: 1.38rem;
+      --discover-action-mobile-w: 3rem;
+      --discover-action-mobile-h: 2.3rem;
+      --discover-action-mobile-main-w: 3.3rem;
+      --discover-action-mobile-main-h: 2.55rem;
+      --messages-title-size: 2.35rem;
+      --messages-match-avatar: 3.7rem;
+      --messages-matches-gap: 0.82rem;
+      --messages-conv-card-pad: 0.8rem;
+      --messages-conv-avatar: 3.1rem;
+      --messages-conv-name-size: 1.04rem;
+      --messages-conv-preview-size: 0.69rem;
+      --boost-page-y: 1.3rem;
+      --boost-mobile-section-gap: 1rem;
+      --boost-hero-pad: 1.05rem;
+      --boost-hero-icon-box: 4.1rem;
+      --boost-title-size: 2.3rem;
+      --boost-desc-size: 0.9rem;
+      --boost-cta-h: 2.85rem;
+      --content-safe-extra: 0.65rem;
+    }
+  }
+
+  @media (min-width: 26.875rem) and (max-width: 29.9375rem) {
+    :root {
+      --page-x: 1.125rem;
+      --section-gap: 1.6rem;
+      --card-gap: 0.82rem;
+      --grid-gap: 0.82rem;
+      --card-radius: 1.35rem;
+      --cta-height: 3.2rem;
+      --discover-card-h: min(69dvh, 28rem);
+      --discover-overlay-top: 6rem;
+      --discover-identity-top: 4.05rem;
+      --discover-name-size: 2.55rem;
+      --discover-title-size: 2.15rem;
+      --discover-compat-size: 3.8rem;
+      --discover-compat-value-size: 1rem;
+      --discover-compat-label-size: 0.46rem;
+      --discover-mobile-filter-gap: 0.45rem;
+      --discover-mobile-filter-px: 0.75rem;
+      --discover-mobile-filter-py: 0.34rem;
+      --name-xl: 2.55rem;
+      --name-lg: 1.12rem;
+      --name-md: 0.98rem;
+      --verified-badge-size: 1.42rem;
+      --discover-action-mobile-w: 3.1rem;
+      --discover-action-mobile-h: 2.35rem;
+      --discover-action-mobile-main-w: 3.4rem;
+      --discover-action-mobile-main-h: 2.6rem;
+      --messages-title-size: 2.45rem;
+      --messages-match-avatar: 3.85rem;
+      --messages-matches-gap: 0.9rem;
+      --messages-conv-card-pad: 0.85rem;
+      --messages-conv-avatar: 3.25rem;
+      --messages-conv-name-size: 1.07rem;
+      --messages-conv-preview-size: 0.72rem;
+      --boost-page-y: 1.4rem;
+      --boost-mobile-section-gap: 1.1rem;
+      --boost-hero-pad: 1.125rem;
+      --boost-hero-icon-box: 4.25rem;
+      --boost-title-size: 2.4rem;
+      --boost-desc-size: 0.92rem;
+      --boost-cta-h: 2.95rem;
+      --content-safe-extra: 0.75rem;
+    }
+  }
+
+  /* Height bands for requested mobile ranges */
+  @media (min-width: 22.5rem) and (max-width: 29.9375rem) and (min-height: 35.5rem) and (max-height: 40rem) {
+    :root {
+      --section-gap: 1.25rem;
+      --cta-height: 2.95rem;
+      --discover-card-h: min(63dvh, 24.75rem);
+      --discover-overlay-top: 5.15rem;
+      --discover-identity-top: 3.15rem;
+      --discover-name-size: 2.1rem;
+      --discover-compat-size: 3.2rem;
+      --discover-compat-value-size: 0.82rem;
+      --discover-compat-label-size: 0.38rem;
+      --name-xl: 2.1rem;
+      --name-lg: 1rem;
+      --name-md: 0.9rem;
+      --verified-badge-size: 1.28rem;
+      --messages-header-top: 0.9rem;
+      --messages-header-gap: 1rem;
+      --messages-matches-section-gap: 1.2rem;
+      --messages-conv-bottom-pad: 0.3rem;
+      --boost-page-y: 1rem;
+      --boost-mobile-section-gap: 0.85rem;
+      --boost-hero-pad: 0.9rem;
+      --boost-title-size: 2.05rem;
+      --boost-desc-size: 0.84rem;
+      --boost-cta-h: 2.6rem;
+      --content-safe-extra: 0.35rem;
+    }
+  }
+
+  @media (min-width: 22.5rem) and (max-width: 29.9375rem) and (min-height: 46.25rem) and (max-height: 52.75rem) {
+    :root {
+      --section-gap: 1.6rem;
+      --cta-height: 3.1rem;
+      --discover-card-h: min(70dvh, 29rem);
+      --discover-overlay-top: 6.1rem;
+      --discover-identity-top: 4.2rem;
+      --messages-header-top: 1rem;
+      --messages-header-gap: 1.2rem;
+      --messages-matches-section-gap: 1.4rem;
+      --messages-conv-bottom-pad: 0.5rem;
+      --boost-page-y: 1.35rem;
+      --boost-mobile-section-gap: 1.05rem;
+      --boost-hero-pad: 1.08rem;
+      --boost-title-size: 2.3rem;
+      --boost-desc-size: 0.9rem;
+      --boost-cta-h: 2.85rem;
+      --content-safe-extra: 0.85rem;
+    }
+  }
+
+  @media (min-width: 22.5rem) and (max-width: 29.9375rem) and (min-height: 56.25rem) {
+    :root {
+      --section-gap: 1.8rem;
+      --cta-height: 3.2rem;
+      --discover-card-h: min(72dvh, 31rem);
+      --discover-overlay-top: 6.5rem;
+      --discover-identity-top: 4.55rem;
+      --messages-header-top: 1.1rem;
+      --messages-header-gap: 1.35rem;
+      --messages-matches-section-gap: 1.6rem;
+      --messages-conv-bottom-pad: 0.75rem;
+      --boost-page-y: 1.5rem;
+      --boost-mobile-section-gap: 1.2rem;
+      --boost-hero-pad: 1.2rem;
+      --boost-title-size: 2.45rem;
+      --boost-desc-size: 0.95rem;
+      --boost-cta-h: 3rem;
+      --content-safe-extra: 1rem;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    :root {
+      --page-x: 1.25rem;
+      --section-gap: 1.75rem;
+      --card-gap: 0.875rem;
+      --grid-gap: 0.875rem;
+      --card-radius: 1.375rem;
+      --icon-size: 1.3125rem;
+      --avatar-size: 3.75rem;
+      --cta-height: 3.125rem;
+      --content-max-width: 50rem;
+      --touch-target: 3rem;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    :root {
+      --page-x: 1.5rem;
+      --section-gap: 2rem;
+      --card-gap: 1rem;
+      --grid-gap: 1rem;
+      --card-radius: 1.5rem;
+      --icon-size: 1.375rem;
+      --avatar-size: 4rem;
+      --cta-height: 3.25rem;
+      --content-max-width: 60rem;
+      --container-chat: 50rem;
+      --container-dashboard: 72rem;
+      --container-commerce: 72rem;
+      --touch-target: 3rem;
+      --density-comfortable-gap: 1.5rem;
+      --density-immersive-gap: 2.25rem;
+      /* Discover - tablet baseline */
+      --discover-header-top: 1.35rem;
+      --discover-card-h: min(72dvh, 33rem);
+      --discover-overlay-pad: 1.5rem;
+      --discover-overlay-top: 8.75rem;
+      --discover-identity-top: 5.4rem;
+      --discover-name-size: 2rem;
+      --discover-title-size: 2.1rem;
+      --discover-action-size: 3.75rem;
+      --discover-action-main-size: 3.35rem;
+      --discover-action-gap: 1rem;
+      --discover-compat-size: 3.7rem;
+      --discover-compat-value-size: 1rem;
+      --discover-compat-label-size: 0.46rem;
+      --name-xl: 2.4rem;
+      --name-lg: 1.15rem;
+      --name-md: 1rem;
+      --verified-badge-size: 1.45rem;
+      /* Messages - tablet baseline */
+      --messages-header-top: 1.2rem;
+      --messages-header-gap: 1.45rem;
+      --messages-title-size: 2.45rem;
+      --messages-matches-section-gap: 1.6rem;
+      --messages-matches-gap: 0.95rem;
+      --messages-match-avatar: 4rem;
+      --messages-conv-gap: 0.7rem;
+      --messages-conv-bottom-pad: 0.8rem;
+      --messages-conv-card-pad: 0.9rem;
+      --messages-conv-card-radius: 1.45rem;
+      --messages-conv-avatar: 3.4rem;
+      --messages-conv-avatar-radius: 1rem;
+      --messages-conv-name-size: 1.12rem;
+      --messages-conv-preview-size: 0.76rem;
+      /* Boost - tablet baseline */
+      --boost-page-y: 1.6rem;
+      --boost-mobile-section-gap: 1.35rem;
+      --boost-hero-pad: 1.25rem;
+      --boost-hero-icon-box: 4.5rem;
+      --boost-title-size: 2.55rem;
+      --boost-desc-size: 0.98rem;
+      --boost-cta-h: 3.2rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    :root {
+      --page-x: 2rem;
+      --section-gap: 2.5rem;
+      --card-gap: 1.25rem;
+      --grid-gap: 1.25rem;
+      --card-radius: 1.75rem;
+      --icon-size: 1.5rem;
+      --avatar-size: 4.5rem;
+      --cta-height: 3.5rem;
+      --content-max-width: 75rem;
+      --content-max-width-wide: 90rem;
+      --container-chat: 52rem;
+      --container-dashboard: 80rem;
+      --container-commerce: 80rem;
+      --container-immersive: 90rem;
+      --panel-width-sm: 16rem;
+      --panel-width-md: 20rem;
+      --panel-width-lg: 22rem;
+      --density-comfortable-gap: 1.75rem;
+      --density-immersive-gap: 2.5rem;
+      /* Discover - desktop baseline */
+      --discover-header-top: 1.5rem;
+      --discover-card-h: min(74dvh, 36rem);
+      --discover-overlay-pad: 1.75rem;
+      --discover-overlay-top: 9.25rem;
+      --discover-identity-top: 5.75rem;
+      --discover-name-size: 2.6rem;
+      --discover-title-size: 2.2rem;
+      --discover-action-size: 4rem;
+      --discover-action-main-size: 3.5rem;
+      --discover-action-gap: 1.15rem;
+      --discover-compat-size: 3.9rem;
+      --discover-compat-value-size: 1.05rem;
+      --discover-compat-label-size: 0.48rem;
+      --name-xl: 2.6rem;
+      --name-lg: 1.2rem;
+      --name-md: 1.02rem;
+      --verified-badge-size: 1.5rem;
+      /* Messages - desktop baseline */
+      --messages-header-top: 1.35rem;
+      --messages-header-gap: 1.65rem;
+      --messages-title-size: 2.6rem;
+      --messages-matches-section-gap: 1.8rem;
+      --messages-matches-gap: 1rem;
+      --messages-match-avatar: 4.2rem;
+      --messages-conv-gap: 0.8rem;
+      --messages-conv-bottom-pad: 1rem;
+      --messages-conv-card-pad: 1rem;
+      --messages-conv-card-radius: 1.6rem;
+      --messages-conv-avatar: 3.6rem;
+      --messages-conv-avatar-radius: 1.1rem;
+      --messages-conv-name-size: 1.16rem;
+      --messages-conv-preview-size: 0.8rem;
+      /* Boost - desktop baseline */
+      --boost-page-y: 1.8rem;
+      --boost-mobile-section-gap: 1.5rem;
+      --boost-hero-pad: 1.4rem;
+      --boost-hero-icon-box: 4.85rem;
+      --boost-title-size: 2.75rem;
+      --boost-desc-size: 1.02rem;
+      --boost-cta-h: 3.35rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    :root {
+      --page-x: 2.5rem;
+      --section-gap: 3rem;
+      --card-gap: 1.5rem;
+      --grid-gap: 1.5rem;
+      --card-radius: 2rem;
+      --icon-size: 1.625rem;
+      --avatar-size: 5rem;
+      --cta-height: 3.75rem;
+      --content-max-width: 80rem;
+      --content-max-width-wide: 96rem;
+      --container-dashboard: 84rem;
+      --container-commerce: 84rem;
+      --container-immersive: 96rem;
+      --panel-width-sm: 17rem;
+      --panel-width-md: 21rem;
+      --panel-width-lg: 24rem;
+      --discover-card-h: min(76dvh, 38rem);
+      --discover-overlay-top: 9.6rem;
+      --discover-name-size: 2.8rem;
+      --discover-title-size: 2.3rem;
+      --messages-title-size: 2.75rem;
+      --messages-match-avatar: 4.4rem;
+      --messages-conv-avatar: 3.8rem;
+      --boost-title-size: 2.9rem;
+      --boost-desc-size: 1.05rem;
+      --boost-cta-h: 3.5rem;
+      --name-xl: 2.8rem;
+      --name-lg: 1.24rem;
+      --name-md: 1.04rem;
+      --verified-badge-size: 1.52rem;
+    }
+  }
+
+  @media (min-width: 90rem) {
+    :root {
+      --page-x: 3rem;
+      --section-gap: 3.25rem;
+      --card-gap: 1.75rem;
+      --grid-gap: 1.75rem;
+      --card-radius: 2.125rem;
+      --icon-size: 1.75rem;
+      --avatar-size: 5.5rem;
+      --cta-height: 3.875rem;
+      --content-max-width: 88rem;
+      --content-max-width-wide: 104rem;
+      --container-dashboard: 90rem;
+      --container-commerce: 90rem;
+      --container-immersive: 104rem;
+      --panel-width-sm: 18rem;
+      --panel-width-md: 22rem;
+      --panel-width-lg: 26rem;
+      --discover-card-h: min(77dvh, 40rem);
+      --discover-overlay-top: 9.9rem;
+      --discover-name-size: 2.95rem;
+      --messages-title-size: 2.9rem;
+      --boost-title-size: 3rem;
+      --name-xl: 2.95rem;
+      --name-lg: 1.28rem;
+      --name-md: 1.06rem;
+      --verified-badge-size: 1.56rem;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    :root {
+      --page-x: 3.5rem;
+      --section-gap: 3.5rem;
+      --card-gap: 2rem;
+      --grid-gap: 2rem;
+      --card-radius: 2.25rem;
+      --icon-size: 1.875rem;
+      --avatar-size: 6rem;
+      --cta-height: 4rem;
+      --content-max-width: 96rem;
+      --content-max-width-wide: 112rem;
+      --container-dashboard: 96rem;
+      --container-commerce: 96rem;
+      --container-immersive: 112rem;
     }
   }
 
   body {
-    @apply bg-black text-white font-sans antialiased overflow-hidden;
-    background: linear-gradient(to bottom, #1a0b2e, #000000);
-    height: 100vh;
+    @apply bg-black text-white antialiased overflow-hidden;
+    font-family: var(--font-family-base);
+    background: radial-gradient(120% 90% at 50% -10%, #1c1326 0%, #07070b 45%, #000000 100%);
+    min-height: 100dvh;
     width: 100vw;
   }
 
@@ -90,6 +841,238 @@
 
   .text-secondary {
     color: #8E8E93;
+  }
+
+  .screen-safe {
+    min-height: 100dvh;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pb-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  }
+
+  .pt-header {
+    padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+  }
+
+  .content-safe {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--content-safe-extra));
+  }
+
+  .app-container {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--content-max-width-wide);
+    padding-inline: var(--page-x);
+  }
+
+  .container-content {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--content-max-width);
+  }
+
+  .container-wide {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--content-max-width-wide);
+  }
+
+  .container-narrow {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 32rem;
+  }
+
+  .container-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  @media (min-width: 64rem) {
+    .container-split {
+      grid-template-columns: 20rem minmax(0, 1fr);
+    }
+  }
+
+  .container-reading {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-reading);
+  }
+
+  .container-form {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-form);
+  }
+
+  .container-chat {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-chat);
+  }
+
+  .container-deck {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-deck);
+  }
+
+  .container-dashboard {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-dashboard);
+  }
+
+  .container-commerce {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-commerce);
+  }
+
+  .container-immersive {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-immersive);
+  }
+
+  .panel-sm {
+    width: min(100%, var(--panel-width-sm));
+  }
+
+  .panel-md {
+    width: min(100%, var(--panel-width-md));
+  }
+
+  .panel-lg {
+    width: min(100%, var(--panel-width-lg));
+  }
+
+  .container-fullscreen {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  .layout-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--grid-gap);
+  }
+
+  @media (min-width: 48rem) {
+    .layout-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .layout-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .layout-autofit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  .density-compact {
+    gap: var(--density-compact-gap);
+  }
+
+  .density-comfortable {
+    gap: var(--density-comfortable-gap);
+  }
+
+  .density-immersive {
+    gap: var(--density-immersive-gap);
+  }
+
+  .screen-template-immersive {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+  }
+
+  .screen-template-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--grid-gap);
+  }
+
+  .screen-template-reading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+    max-width: var(--container-reading);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .screen-template-commerce {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+    max-width: var(--container-commerce);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .screen-template-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--section-gap);
+    max-width: var(--container-dashboard);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  @media (min-width: 48rem) {
+    .screen-template-split {
+      grid-template-columns: var(--panel-width-sm) minmax(0, 1fr);
+    }
+  }
+
+  .surface-card {
+    width: 100%;
+    border-radius: var(--card-radius);
+    padding: 1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .surface-card {
+      padding: 1.25rem;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .surface-card {
+      padding: 1.5rem;
+    }
+  }
+
+  .fluid-title {
+    font-size: var(--text-3xl);
+    line-height: 1.1;
+  }
+
+  .fluid-subtitle {
+    font-size: var(--text-lg);
   }
 
   /* Hide scrollbar */
